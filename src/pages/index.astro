@@ -104,10 +104,23 @@ const description =
           <p class="hint">The draw uses your browser's cryptographic random generator, so every eligible entry has an equal shot. Nothing you paste is uploaded.</p>
 
           <div class="dsec ai-block">
-            <div class="dsec-h">No clean list? Let AI build one</div>
-            <p class="ai-note">Can't easily copy the comments? Paste this into ChatGPT or Claude with a screenshot of the thread, then drop the result above.</p>
-            <pre class="rec" id="ai-prompt"><code></code></pre>
-            <button class="btn btn--sm" id="copy-prompt" type="button">Copy prompt</button>
+            <div class="dsec-h">Don't want to copy comments by hand?</div>
+            <div class="seg seg--full" role="group" aria-label="Helper method">
+              <button class="seg__btn is-active" data-helper="page" type="button">Grab from the page</button>
+              <button class="seg__btn" data-helper="ai" type="button">Ask an AI</button>
+            </div>
+
+            <div class="helper-panel" id="helper-page">
+              <p class="ai-note">Open the post and scroll until every comment loads, then press F12, open the Console, paste this, and hit Enter. It copies every @handle on the page to your clipboard, ready to paste above. A browser-automation extension or Playwright can run the same snippet.</p>
+              <pre class="rec rec--wrap" id="page-snippet"><code></code></pre>
+              <button class="btn btn--sm" id="copy-snippet" type="button">Copy snippet</button>
+            </div>
+
+            <div class="helper-panel is-hidden" id="helper-ai">
+              <p class="ai-note">Can't run code? Paste this into ChatGPT or Claude with a screenshot of the thread, then drop the result above.</p>
+              <pre class="rec rec--wrap" id="ai-prompt"><code></code></pre>
+              <button class="btn btn--sm" id="copy-prompt" type="button">Copy prompt</button>
+            </div>
           </div>
         </div>
       </section>

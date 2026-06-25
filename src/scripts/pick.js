@@ -35,6 +35,23 @@ Below (or in the attached screenshot) are the comments from my post. List every 
 Comments:
 <paste the comments or attach the screenshot here>`;
 
+// Console / automation snippet: scrapes @handles from the rendered page,
+// dedupes, sorts, and copies them to the clipboard. Skips common nav links.
+const PAGE_SNIPPET = `(() => {
+  const skip = new Set(['home','explore','search','notifications','messages','settings','reels','reel','stories','about','privacy','terms','help','p','i','tv','login','signup']);
+  const handles = new Set();
+  (document.body.innerText.match(/@[A-Za-z0-9_.]{2,30}/g) || [])
+    .forEach(h => handles.add(h.replace(/\\.+$/, '')));
+  document.querySelectorAll('a[href]').forEach(a => {
+    const m = (a.getAttribute('href') || '').match(/^\\/@?([A-Za-z0-9_.]{2,30})\\/?$/);
+    if (m && !skip.has(m[1].toLowerCase())) handles.add('@' + m[1]);
+  });
+  const list = [...handles].sort().join('\\n');
+  console.log(list);
+  try { copy(list); console.log('lilPick: ' + handles.size + ' handles copied to your clipboard'); }
+  catch (e) { console.log('lilPick: copy the ' + handles.size + ' handles printed above'); }
+})();`;
+
 /* ---------- crypto-fair randomness ---------- */
 // uniform integer in [0, max) without modulo bias
 function randInt(max) {
@@ -182,6 +199,22 @@ just here to look around
 function initPick() {
   initTheme();
   $('#ai-prompt').querySelector('code').textContent = AI_PROMPT;
+  $('#page-snippet').querySelector('code').textContent = PAGE_SNIPPET;
+
+  // toggle between the page-scrape snippet and the AI prompt
+  $$('[data-helper]').forEach((b) => b.addEventListener('click', () => {
+    $$('[data-helper]').forEach((x) => x.classList.toggle('is-active', x === b));
+    $('#helper-page').classList.toggle('is-hidden', b.dataset.helper !== 'page');
+    $('#helper-ai').classList.toggle('is-hidden', b.dataset.helper !== 'ai');
+  }));
+  $('#copy-snippet').addEventListener('click', async (e) => {
+    try {
+      await navigator.clipboard.writeText(PAGE_SNIPPET);
+      const btn = e.currentTarget;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = 'Copy snippet'; }, 1100);
+    } catch (err) {}
+  });
 
   $('#f-entries').addEventListener('input', refreshPool);
   $('#f-keyword').addEventListener('input', refreshPool);

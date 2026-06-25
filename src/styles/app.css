@@ -854,8 +854,22 @@ html[data-theme="dark"] .seg__btn.is-active {
   line-height: 1.5;
   color: var(--muted);
 }
-.ai-block .rec {
-  max-height: 150px;
+.seg--full {
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.seg--full .seg__btn {
+  flex: 1;
+  text-align: center;
+}
+/* wrap long snippets so they never blow out the column */
+.ai-block .rec,
+.rec--wrap {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 190px;
+  overflow-y: auto;
 }
 
 /* ---------- lilPick result ---------- */

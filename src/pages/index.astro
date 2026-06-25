@@ -111,13 +111,13 @@ const description =
             </div>
 
             <div class="helper-panel" id="helper-page">
-              <p class="ai-note">Open the post and scroll until every comment loads, then press F12, open the Console, paste this, and hit Enter. It copies every @handle on the page to your clipboard, ready to paste above. A browser-automation extension or Playwright can run the same snippet.</p>
+              <p class="ai-note">Works for comments and for likes, reactions, or follower lists, since each person there is a profile link. Open the post (or its likes list), scroll until everyone loads, then press F12, open the Console, paste this, and hit Enter. It copies every @handle to your clipboard. A browser-automation extension or Playwright can run the same snippet. Grabs handles, not display names, see the AI option for those.</p>
               <pre class="rec rec--wrap" id="page-snippet"><code></code></pre>
               <button class="btn btn--sm" id="copy-snippet" type="button">Copy snippet</button>
             </div>
 
             <div class="helper-panel is-hidden" id="helper-ai">
-              <p class="ai-note">Can't run code? Paste this into ChatGPT or Claude with a screenshot of the thread, then drop the result above.</p>
+              <p class="ai-note">Best when the list shows real names instead of @handles, or when you only have a screenshot. Paste this into ChatGPT or Claude with the comments or a screenshot, then drop the result above. Set "Each entry is: A whole line" first if it returns names.</p>
               <pre class="rec rec--wrap" id="ai-prompt"><code></code></pre>
               <button class="btn btn--sm" id="copy-prompt" type="button">Copy prompt</button>
             </div>

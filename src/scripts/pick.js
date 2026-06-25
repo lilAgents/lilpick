@@ -28,28 +28,33 @@ function initTheme() {
 const state = { mode: 'handle' };
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+// Works for comments and for likes / reactions / followers (the AI can read
+// display names when no @handle is shown).
 const AI_PROMPT = `I'm running a giveaway and need a clean list of everyone who entered.
 
-Below (or in the attached screenshot) are the comments from my post. List every unique commenter's @handle, one per line, with nothing else: no numbers, no comment text, no duplicates. If a handle appears more than once, include it only once.
+Below (or in the attached screenshot) are the entrants from my post. They may be comments, or the people who liked or reacted. List every unique entrant, one per line, with nothing else: no numbers, no extra text, no duplicates. Use each person's @handle if one is shown; otherwise use their display name. If someone appears more than once, include them only once.
 
-Comments:
-<paste the comments or attach the screenshot here>`;
+Entrants:
+<paste the text or attach the screenshot here>`;
 
-// Console / automation snippet: scrapes @handles from the rendered page,
-// dedupes, sorts, and copies them to the clipboard. Skips common nav links.
+// Console / automation snippet: walks the rendered page and grabs @handles
+// from profile links (likes, reactions, followers, commenters) plus any
+// @mentions in visible text. Handles are reliably extractable across
+// platforms; display names are not, so those go through the AI prompt.
+// Common nav links are skipped.
 const PAGE_SNIPPET = `(() => {
-  const skip = new Set(['home','explore','search','notifications','messages','settings','reels','reel','stories','about','privacy','terms','help','p','i','tv','login','signup']);
-  const handles = new Set();
+  const skip = new Set(['home','explore','search','notifications','messages','settings','reels','reel','stories','about','privacy','terms','help','p','i','tv','login','signup','share','hashtag','accounts']);
+  const out = new Set();
   (document.body.innerText.match(/@[A-Za-z0-9_.]{2,30}/g) || [])
-    .forEach(h => handles.add(h.replace(/\\.+$/, '')));
+    .forEach(h => out.add(h.replace(/\\.+$/, '')));
   document.querySelectorAll('a[href]').forEach(a => {
     const m = (a.getAttribute('href') || '').match(/^\\/@?([A-Za-z0-9_.]{2,30})\\/?$/);
-    if (m && !skip.has(m[1].toLowerCase())) handles.add('@' + m[1]);
+    if (m && !skip.has(m[1].toLowerCase())) out.add('@' + m[1]);
   });
-  const list = [...handles].sort().join('\\n');
+  const list = [...out].sort().join('\\n');
   console.log(list);
-  try { copy(list); console.log('lilPick: ' + handles.size + ' handles copied to your clipboard'); }
-  catch (e) { console.log('lilPick: copy the ' + handles.size + ' handles printed above'); }
+  try { copy(list); console.log('lilPick: ' + out.size + ' handles copied to your clipboard'); }
+  catch (e) { console.log('lilPick: copy the ' + out.size + ' handles printed above'); }
 })();`;
 
 /* ---------- crypto-fair randomness ---------- */

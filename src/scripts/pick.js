@@ -19,7 +19,7 @@ function initTheme() {
   btn.addEventListener('click', () => {
     const next = current() === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
-    try { localStorage.setItem('lilpick-theme', next); } catch (e) {}
+    try { localStorage.setItem('lilpick-theme', next); } catch (e) { /* storage may be unavailable; safe to ignore */ }
     setThemeIcon(btn, next);
   });
 }
@@ -218,7 +218,7 @@ function initPick() {
       const btn = e.currentTarget;
       btn.textContent = 'Copied';
       setTimeout(() => { btn.textContent = 'Copy snippet'; }, 1100);
-    } catch (err) {}
+    } catch (err) { /* storage may be unavailable; safe to ignore */ }
   });
 
   $('#f-entries').addEventListener('input', refreshPool);
@@ -252,7 +252,7 @@ function initPick() {
       const btn = e.currentTarget;
       btn.textContent = 'Copied';
       setTimeout(() => { btn.textContent = 'Copy prompt'; }, 1100);
-    } catch (err) {}
+    } catch (err) { /* storage may be unavailable; safe to ignore */ }
   });
 
   refreshPool();
